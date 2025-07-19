@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -6,31 +8,44 @@ namespace StockQuoteAlertProject.services
 {
     public class EmailService
     {
-        private readonly string smtpHost;
-        private readonly int smtpPort;
-        private readonly string smtpUser;
-        private readonly string smtpPassword;
-        private readonly string senderEmail;
+        private readonly string _host;
+        private readonly int _port;
+        private readonly string _user;
+        private readonly string _password;
+        private readonly string _sender;
 
         public EmailService(string host, int port, string user, string password, string sender)
         {
-            smtpHost = host;
-            smtpPort = port;
-            smtpUser = user;
-            smtpPassword = password;
-            senderEmail = sender;
+            _host = host;
+            _port = port;
+            _user = user;
+            _password = password;
+            _sender = sender;
         }
 
-        public async Task EnviarEmailAsync(string destinatario, string assunto, string corpo)
+        public async Task EnviarEmailAsync(List<string> destinatarios, string assunto, string corpo)
         {
-            using var client = new SmtpClient(smtpHost, smtpPort)
+            using var client = new SmtpClient(_host, _port)
             {
-                Credentials = new NetworkCredential(smtpUser, smtpPassword),
+                Credentials = new NetworkCredential(_user, _password),
                 EnableSsl = true
             };
 
-            using var mail = new MailMessage(senderEmail, destinatario, assunto, corpo);
-            await client.SendMailAsync(mail);
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(_sender),
+                Subject = assunto,
+                Body = corpo,
+                IsBodyHtml = false,
+            };
+
+            foreach (var destinatario in destinatarios)
+            {
+                mailMessage.To.Add(destinatario);
+            }
+
+            await client.SendMailAsync(mailMessage);
+            Console.WriteLine("📧 Alerta enviado por e-mail.");
         }
     }
 }
