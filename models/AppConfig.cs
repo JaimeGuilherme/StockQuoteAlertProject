@@ -46,23 +46,9 @@ namespace StockQuoteAlertProject{
             if (Recipients == null || Recipients.Count == 0)
                 throw new Exception("Nenhum destinatário de email configurado no arquivo config.json.");
 
-            foreach (var recipient in Recipients)
-            {
-                if (!IsValidEmail(recipient))
+            foreach (var recipient in Recipients){
+                if (!ValidationUtils.IsValidEmail(recipient))
                     throw new Exception($"Destinatário de email inválido: {recipient}");
-            }
-        }
-
-        // Método auxiliar para validar formato de email
-        private bool IsValidEmail(string email){
-            try
-            {
-                var addr = new MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
             }
         }
     }
@@ -85,8 +71,8 @@ namespace StockQuoteAlertProject{
 
             if (string.IsNullOrWhiteSpace(User))
                 throw new Exception("Usuário não configurado no arquivo de configuração.");
-            
-            if (!IsValidEmail(User))
+
+            if (!ValidationUtils.IsValidEmail(User))
                 throw new Exception($"Email usuário inválido: {User}");
 
             if (string.IsNullOrWhiteSpace(Password))
@@ -95,19 +81,8 @@ namespace StockQuoteAlertProject{
             if (string.IsNullOrWhiteSpace(Sender))
                 throw new Exception("Email remetente não configurado no arquivo de configuração.");
 
-            if (!IsValidEmail(Sender))
+            if (!ValidationUtils.IsValidEmail(Sender))
                 throw new Exception($"Email remetente inválido: {Sender}");
-        }
-
-        // Método auxiliar para validar formato de email
-        private bool IsValidEmail(string email){
-            try{
-                var addr = new MailAddress(email);
-                return addr.Address == email;
-            }
-            catch{
-                return false;
-            }
         }
     }
 
@@ -120,6 +95,19 @@ namespace StockQuoteAlertProject{
         public void Validate(){
             if (string.IsNullOrWhiteSpace(Token))
                 throw new Exception("Token da API Brapi não configurado no arquivo de configuração.");
+        }
+    }
+
+    // Classe utilitária para validações
+    public static class ValidationUtils{
+        public static bool IsValidEmail(string email){
+            try{
+                var addr = new MailAddress(email);
+                return addr.Address == email;
+            }
+            catch{
+                return false;
+            }
         }
     }
 }
