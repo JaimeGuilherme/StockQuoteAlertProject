@@ -29,8 +29,8 @@ namespace StockQuoteAlertProject
                 throw new Exception("Configuração de SMTP não pode ser nula.");
             SMTP.Validate();
 
-            if (Brapi == null || string.IsNullOrWhiteSpace(Brapi.Token))
-                throw new Exception("Token da API Brapi não configurado.");
+            if (Brapi == null)
+                throw new Exception("Configuração da API Brapi não pode ser nula.");
             Brapi.Validate();
         }
     }
@@ -49,7 +49,7 @@ namespace StockQuoteAlertProject
 
     // Configurações do servidor SMTP para envio de email
     public class SmtpConfig{
-        public string Host { get; set; } = "smtp.gmail.com"; // Host padrão do Gmail SMTP
+        public string Host { get; set; } = string.Empty;     // Host do SMTP
         public int Port { get; set; } = 587;                 // Porta padrão TLS
         public string User { get; set; } = string.Empty;     // Usuário do SMTP
         public string Password { get; set; } = string.Empty; // Senha do SMTP
@@ -57,17 +57,20 @@ namespace StockQuoteAlertProject
 
         // Validação dos campos SMTP obrigatórios
         public void Validate(){
+            if (string.IsNullOrWhiteSpace(User))
+                throw new Exception("Provedor de Email não configurado no arquivo de configuração.");
+
             if (!(Port > 0))
-                throw new Exception("Porta inválida.");
+                throw new Exception("Porta no arquivo de configuração inválida.");
 
             if (string.IsNullOrWhiteSpace(User))
-                throw new Exception("Usuário não configurado.");
+                throw new Exception("Usuário não configurado no arquivo de configuração.");
 
             if (string.IsNullOrWhiteSpace(Password))
-                throw new Exception("Senha não configurada.");
+                throw new Exception("Senha não configurada no arquivo de configuração.");
 
             if (string.IsNullOrWhiteSpace(Sender))
-                throw new Exception("Email remetente não configurado.");
+                throw new Exception("Email remetente não configurado no arquivo de configuração.");
         }
     }
 
@@ -79,7 +82,7 @@ namespace StockQuoteAlertProject
         // Validação para garantir que o token foi informado
         public void Validate(){
             if (string.IsNullOrWhiteSpace(Token))
-                throw new Exception("Token da API Brapi não configurado.");
+                throw new Exception("Token da API Brapi não configurado no arquivo de configuração.");
         }
     }
 }
