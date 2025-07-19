@@ -1,5 +1,5 @@
 # 📈 StockQuoteAlertProject
-C# application that monitors stock prices on B3 in real-time and sends automated email alerts when assets reach predefined buy/sell thresholds. Perfect for investors seeking timely notifications on market opportunities.
+C# application that monitors stock prices on B3 in real-time (for each minute) and sends automated email alerts when assets reach predefined buy/sell thresholds. Perfect for investors seeking timely notifications on market opportunities.
 
 ---
 
