@@ -15,11 +15,12 @@ namespace StockQuoteAlertProject
         {
             if (args.Length != 3)
             {
-                Console.WriteLine("Variáveis: <ATIVO> <PRECO_VENDA> <PRECO_COMPRA>");
+                Console.WriteLine("Uso: stock-quote-alert.exe <ATIVO> <PRECO_VENDA> <PRECO_COMPRA>");
                 return;
             }
 
             string ativo = args[0];
+
             if (!decimal.TryParse(args[1], NumberStyles.Any, CultureInfo.InvariantCulture, out decimal precoVenda) ||
                 !decimal.TryParse(args[2], NumberStyles.Any, CultureInfo.InvariantCulture, out decimal precoCompra))
             {
@@ -27,94 +28,82 @@ namespace StockQuoteAlertProject
                 return;
             }
 
-            if (precoVenda <= 0 || precoCompra <= 0)
+            try
             {
-                Console.WriteLine("Os preços devem ser maiores que zero.");
-                return;
+                var config = ConfigService.LoadConfig("config.json");
+
+                var emailService = new EmailService(
+                    config.SMTP.Host,
+                    config.SMTP.Port,
+                    config.SMTP.User,
+                    config.SMTP.Password,
+                    config.SMTP.Sender
+                );
+
+                Console.WriteLine("⏳ Monitorando. Pressione Ctrl + C para encerrar.");
+
+                while (true)
+                {
+                    Console.WriteLine($"Monitorando {ativo}... Venda: R$ {precoVenda}, Compra: R$ {precoCompra}");
+                    try
+                    {
+                        decimal precoAtual = await ObterPrecoAtual(ativo, config.Brapi.Token);
+                        Console.WriteLine($"{DateTime.Now}: {ativo} = R$ {precoAtual}");
+
+                        if (precoAtual > precoVenda)
+                        {
+                            await emailService.EnviarEmailAsync(
+                                config.Email.Recipients,
+                                $"Venda recomendada: {ativo}",
+                                $"O preço está em R$ {precoAtual}. Recomendado vender."
+                            );
+                        }
+                        else if (precoAtual < precoCompra)
+                        {
+                            await emailService.EnviarEmailAsync(
+                                config.Email.Recipients,
+                                $"Compra recomendada: {ativo}",
+                                $"O preço está em R$ {precoAtual}. Recomendado comprar."
+                            );
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Erro durante monitoramento: {ex.Message}");
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(config.MonitoringIntervalSeconds));
+                }
             }
-
-            var config = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("config.json")
-                .Build();
-
-            string emailDestino = GetRequiredConfig(config, "Email:Destino");
-            var smtpConfig = config.GetSection("SMTP");
-            string tokenBrapi = GetRequiredConfig(config, "Brapi:Token");
-
-            var emailService = new EmailService(
-                GetRequiredConfig(smtpConfig, "Host"),
-                int.Parse(GetRequiredConfig(smtpConfig, "Port")),
-                GetRequiredConfig(smtpConfig, "User"),
-                GetRequiredConfig(smtpConfig, "Password"),
-                GetRequiredConfig(smtpConfig, "Sender")
-            );
-
-            Console.WriteLine($"Monitorando {ativo}... Venda: R$ {precoVenda}, Compra: R$ {precoCompra}");
-
-            while (true)
+            catch (Exception ex)
             {
-                try
-                {
-                    decimal precoAtual = await ObterPrecoAtual(ativo, tokenBrapi);
-                    Console.WriteLine($"{DateTime.Now}: {ativo} = R$ {precoAtual}");
-
-                    if (precoAtual > precoVenda)
-                    {
-                        await emailService.EnviarEmailAsync(
-                            emailDestino,
-                            $"Venda recomendada: {ativo}",
-                            $"O preço está em R$ {precoAtual}. Recomendado vender."
-                        );
-                    }
-                    else if (precoAtual < precoCompra)
-                    {
-                        await emailService.EnviarEmailAsync(
-                            emailDestino,
-                            $"Compra recomendada: {ativo}",
-                            $"O preço está em R$ {precoAtual}. Recomendado comprar."
-                        );
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Erro: {ex.Message}");
-                }
-
-                await Task.Delay(TimeSpan.FromMinutes(1));
+                Console.WriteLine($"Erro ao carregar configuração: {ex.Message}");
             }
         }
 
         static async Task<decimal> ObterPrecoAtual(string ativo, string token)
         {
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+            using var client = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(10)
+            };
+
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             string url = $"https://brapi.dev/api/quote/{ativo}";
             var response = await client.GetAsync(url);
             response.EnsureSuccessStatusCode();
 
-            var content = await response.Content.ReadAsStringAsync();
-            using var doc = JsonDocument.Parse(content);
-            var root = doc.RootElement.GetProperty("results")[0];
+            using var stream = await response.Content.ReadAsStreamAsync();
+            using var doc = JsonDocument.Parse(stream);
+
+            var results = doc.RootElement.GetProperty("results");
+
+            if (results.GetArrayLength() == 0)
+                throw new Exception($"Ativo '{ativo}' não encontrado ou sem dados.");
+
+            var root = results[0];
             return root.GetProperty("regularMarketPrice").GetDecimal();
         }
-
-        static string GetRequiredConfig(IConfiguration config, string key)
-        {
-            return config[key] ?? throw new ArgumentException($"Chave obrigatória '{key}' ausente no config.json");
-        }
-    }
-
-    class BrapiResponse
-    {
-        public StockQuote[]? Results { get; set; }
-    }
-
-    class StockQuote
-    {
-        public string? Symbol { get; set; }
-        public string? ShortName { get; set; }
-        public decimal RegularMarketPrice { get; set; }
     }
 }

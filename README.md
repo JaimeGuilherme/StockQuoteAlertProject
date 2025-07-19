@@ -18,7 +18,7 @@ Create a file named `config.json` in the project root with the following content
 ```json
 {
   "Email": {
-    "Destino": "your@email.com"
+    "Destino": ["example1@email.com","example2@email.com"]
   },
   "SMTP": {
     "Host": "smtp.gmail.com",
@@ -29,7 +29,8 @@ Create a file named `config.json` in the project root with the following content
   },
   "Brapi": {
     "Token": "your_brapi_token"
-  }
+  },
+  "MonitoringIntervalSeconds": your time in seconds (int)
 }
 ```
 
