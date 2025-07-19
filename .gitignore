@@ -2,6 +2,10 @@
 bin/
 obj/
 
+# Ignore user-specific files
+*.user
+*.suo
+
 # Ignore Visual Studio settings
 .vscode/
 *.vs/
@@ -20,3 +24,6 @@ config.json
 # Ignore dotnet environment files
 *.cache/
 *.db
+
+# Ignore publish output
+publish/

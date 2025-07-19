@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("StockQuoteAlertProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+da0963235165e71d01824c1442f2ba74f74a61d9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1c2ba9e11ceadacd3fd11c0e0a363b3c40a45013")]
 [assembly: System.Reflection.AssemblyProductAttribute("StockQuoteAlertProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("StockQuoteAlertProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
