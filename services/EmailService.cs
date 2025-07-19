@@ -21,7 +21,7 @@ namespace StockQuoteAlertProject.services
         }
 
         // Método assíncrono para enviar email para uma lista de destinatários
-        public async Task EnviarEmailAsync(List<string> destinatarios, string assunto, string corpo){
+        public async Task EnviarEmailAsync(List<string> recipients, string assunto, string corpo){
             // Configura o cliente SMTP com host, porta, credenciais e SSL habilitado
             using var client = new SmtpClient(_host, _port){
                 Credentials = new NetworkCredential(_user, _password),
@@ -37,8 +37,8 @@ namespace StockQuoteAlertProject.services
             };
 
             // Adiciona todos os destinatários no campo "To"
-            foreach (var destinatario in destinatarios){
-                mailMessage.To.Add(destinatario);
+            foreach (var recipient in recipients){
+                mailMessage.To.Add(recipient);
             }
 
             // Envia o email de forma assíncrona
