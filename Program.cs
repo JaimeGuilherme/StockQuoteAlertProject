@@ -15,7 +15,7 @@ namespace StockQuoteAlertProject
         {
             if (args.Length != 3)
             {
-                Console.WriteLine("Uso: StockQuoteAlertProject.exe <ATIVO> <PRECO_VENDA> <PRECO_COMPRA>");
+                Console.WriteLine("Variáveis: <ATIVO> <PRECO_VENDA> <PRECO_COMPRA>");
                 return;
             }
 
@@ -27,7 +27,12 @@ namespace StockQuoteAlertProject
                 return;
             }
 
-            // Carrega configurações do config.json
+            if (precoVenda <= 0 || precoCompra <= 0)
+            {
+                Console.WriteLine("Os preços devem ser maiores que zero.");
+                return;
+            }
+
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("config.json")
