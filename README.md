@@ -1,144 +1,145 @@
+
 # 📈 StockQuoteAlertProject
 
-C# application that monitors stock prices on B3 in real-time (for each minute) and sends automated email alerts when assets reach predefined buy/sell thresholds. Perfect for investors seeking timely notifications on market opportunities.
+C# application that monitors B3 stock prices in real-time (every minute) and sends automated email alerts when assets reach predefined buy/sell thresholds. Perfect for investors seeking timely notifications about market opportunities.
 
 ---
 
-## ⚙️ Essential Precondition
+## ⚙️ Essential Prerequisites
 
 - [.NET SDK 9+](https://dotnet.microsoft.com/en-us/download)
-- Email account with SMTP access (e.g., Gmail, Outlook, etc)
+- Email account with SMTP access (e.g., Gmail, Outlook, etc.)
 - Access token for the [Brapi API](https://brapi.dev/)
 
 ---
 
-## 🔧 Arquivo de Configuração (`config.json`)
+## 🔧 Configuration File (`config.json`)
 
-Para configurar o sistema, crie um arquivo chamado `config.json` na raiz do projeto com a seguinte estrutura:
+To configure the system, create a file named `config.json` in the project root with the following structure:
 
 ```json
 {
   "Email": {
-    "Recipients": ["exemplo1@email.com", "exemplo2@email.com"]
+    "Recipients": ["example1@email.com", "example2@email.com"]
   },
   "SMTP": {
-    "Host": "smtp.provedor.com",
+    "Host": "smtp.provider.com",
     "Port": 587,
-    "User": "seu_email@provedor.com",
-    "Password": "sua_senha_ou_senha_de_app",
-    "Sender": "alerta@seudominio.com"
+    "User": "your_email@provider.com",
+    "Password": "your_password_or_app_password",
+    "Sender": "alert@yourdomain.com"
   },
   "Brapi": {
-    "Token": "seu_token_de_acesso_brapi"
+    "Token": "your_brapi_access_token"
   },
   "MonitoringIntervalSeconds": 60
 }
 ```
 
-### Explicação detalhada dos campos:
+### Detailed explanation of the fields:
 
-| Campo                       | Tipo         | Descrição                                                                                 | Exemplo                                   |
-|-----------------------------|--------------|-------------------------------------------------------------------------------------------|-------------------------------------------|
-| **Email.Recipients**         | Array string | Lista de e-mails que receberão os alertas. Deve conter pelo menos um e-mail válido.      | `["email1@exemplo.com", "email2@exemplo.com"]` |
-| **SMTP.Host**                | String       | Endereço do servidor SMTP do seu provedor de e-mail.                                     | `"smtp.provedor.com"`                         |
-| **SMTP.Port**                | Inteiro      | Porta do servidor SMTP (número sem aspas).                                               | `587`                                     |
-| **SMTP.User**                | String       | E-mail usado para autenticação no servidor SMTP.                                         | `"seu_email@provedor.com"`                 |
-| **SMTP.Password**            | String       | Senha do e-mail ou senha de app (no caso de Gmail e outros).                             | `"sua_senha_ou_senha_de_app"`             |
-| **SMTP.Sender**              | String       | Endereço de e-mail que aparecerá como remetente das mensagens enviadas.                  | `"alerta@seudominio.com"`                  |
-| **Brapi.Token**              | String       | Token de acesso à API Brapi para autenticação nas requisições.                           | `"seu_token_de_acesso_brapi"`              |
-| **MonitoringIntervalSeconds**| Inteiro      | Intervalo em segundos para checagem dos preços das ações. Deve ser um número inteiro.    | `60` (verifica a cada 60 segundos)        |
+| Field                     | Type         | Description                                                                             | Example                                  |
+|---------------------------|--------------|-----------------------------------------------------------------------------------------|------------------------------------------|
+| **Email.Recipients**       | Array string | List of emails that will receive alerts. Must contain at least one valid email address. | `["email1@example.com", "email2@example.com"]` |
+| **SMTP.Host**              | String       | SMTP server address of your email provider.                                            | `"smtp.provider.com"`                     |
+| **SMTP.Port**              | Integer      | SMTP server port (number without quotes).                                              | `587`                                    |
+| **SMTP.User**              | String       | Email used for SMTP authentication.                                                    | `"your_email@provider.com"`               |
+| **SMTP.Password**          | String       | Email password or app password (for Gmail and others).                                | `"your_password_or_app_password"`        |
+| **SMTP.Sender**            | String       | Email address that will appear as the sender of the messages.                         | `"alert@yourdomain.com"`                  |
+| **Brapi.Token**            | String       | Access token for the Brapi API to authenticate requests.                              | `"your_brapi_access_token"`               |
+| **MonitoringIntervalSeconds**| Integer    | Interval in seconds to check stock prices. Must be an integer number.                  | `60` (checks every 60 seconds)            |
 
-### Importante:
+### Important:
 
-- Não se esqueça de nenhum campo.
-- Strings (texto) **devem estar entre aspas duplas `" "`**.
-- Números inteiros **não devem ter aspas**.
-- O campo `Recipients` aceita vários e-mails, separados por vírgulas e cada um entre aspas.
-- A senha no campo `Password` deve ser mantida em segurança e **nunca** deve ser compartilhada publicamente.
-- Para Gmail com autenticação em dois fatores, utilize uma **senha de app** em vez da sua senha normal.
+- Do not forget any fields.
+- Strings **must be enclosed in double quotes `" "`**.
+- Integers **must NOT be enclosed in quotes**.
+- The `Recipients` field accepts multiple emails, separated by commas, each inside quotes.
+- The password in the `Password` field should be kept secure and **never shared publicly**.
+- For Gmail with two-factor authentication, use an **app password** instead of your normal password.
 
 ---
 
-## Exemplos de configuração SMTP
+## SMTP Configuration Examples
 
 ### Gmail
 
 - **Host:** `smtp.gmail.com`
-- **Porta:** `587` (TLS) ou `465` (SSL)
-- **User:** seu e-mail Gmail completo (ex: `meuemail@gmail.com`)
-- **Password:** sua senha de app (se usar autenticação em dois fatores) ou sua senha normal (não recomendado)
-- **Sender:** e-mail remetente, geralmente igual ao usuário
+- **Port:** `587` (TLS) or `465` (SSL)
+- **User:** your full Gmail email (e.g., `myemail@gmail.com`)
+- **Password:** your app password (if using two-factor authentication) or your normal password (not recommended)
+- **Sender:** sender email, usually the same as user
 
-**Dicas:**
+**Tips:**
 
-- Se você usa autenticação em dois fatores no Gmail, **crie uma senha de app** para este sistema.
-- Ative o acesso a apps menos seguros se não usar autenticação em dois fatores (não recomendado).
-- Use porta 587 com TLS preferencialmente.
+- If you use two-factor authentication on Gmail, **create an app password** for this system.
+- Enable access for less secure apps if not using two-factor authentication (not recommended).
+- Prefer port 587 with TLS.
 
 ---
 
 ### Outlook / Hotmail / Microsoft 365
 
 - **Host:** `smtp.office365.com`
-- **Porta:** `587` (TLS)
-- **User:** seu e-mail Outlook completo (ex: `meuemail@outlook.com`)
-- **Password:** sua senha normal ou senha de app
-- **Sender:** e-mail remetente, geralmente igual ao usuário
+- **Port:** `587` (TLS)
+- **User:** your full Outlook email (e.g., `myemail@outlook.com`)
+- **Password:** your normal password or app password
+- **Sender:** sender email, usually the same as user
 
-**Dicas:**
+**Tips:**
 
-- Use porta 587 com TLS.
-- Pode ser necessário configurar permissões na conta para permitir SMTP externo.
-- Para contas corporativas, verifique com o administrador se o SMTP está liberado.
+- Use port 587 with TLS.
+- You may need to configure permissions in your account to allow external SMTP.
+- For corporate accounts, check with your administrator if SMTP is allowed.
 
 ---
 
-## Como rodar
+## How to Run
 
-Abra um terminal na pasta do projeto e execute o comando abaixo, passando o símbolo da ação, o preço de venda (limite superior) e o preço de compra (limite inferior) como argumentos:
+Open a terminal in the project folder and run the command below, passing the stock symbol, sell price (upper limit), and buy price (lower limit) as arguments:
 
 ```bash
 dotnet run -- <STOCK_SYMBOL> <SELL_PRICE> <BUY_PRICE>
 ```
 
-### Exemplo:
+### Example:
 
 ```bash
 dotnet run -- PETR4 22.67 22.59
 ```
 
-O programa irá monitorar continuamente o preço da ação e enviar alertas por e-mail sempre que o preço cruzar os limites definidos.
+The program will continuously monitor the stock price and send email alerts whenever the price crosses the defined limits.
 
 ---
 
-### 🛠️ Publicar e executar o projeto
+### 🛠️ Publish and Run the Project
 
-Para compilar o projeto e gerar um executável `.exe`, siga os passos:
+To compile the project and generate an executable `.exe`, follow these steps:
 
-#### 1. Publicar o projeto
+#### 1. Publish the project
 
-No terminal, dentro da pasta do projeto, rode:
+In the terminal inside the project folder, run:
 
 ```bash
 dotnet publish -c Release -o publish
 ```
 
-- Isso irá gerar os arquivos compilados na pasta `publish/`, incluindo o executável `stock-quote-alert.exe`.
+- This will generate the compiled files in the `publish/` folder, including the executable `stock-quote-alert.exe`.
 
-#### 2. Executar o `.exe`
+#### 2. Run the `.exe`
 
-No terminal, navegue até a pasta `publish`:
+In the terminal, navigate to the `publish` folder:
 
 ```bash
 cd publish
 ```
 
-Agora execute o programa com os parâmetros desejados (exemplo com o ativo PETR4):
+Now run the program with the desired parameters (example with the stock PETR4):
 
 ```bash
 .\stock-quote-alert.exe PETR4 22.67 22.59
 ```
 
-- `PETR4` é o símbolo da ação
-- `22.67` é o preço alvo superior (limite para venda)
-- `22.59` é o preço alvo inferior (limite para compra)
+- `PETR4` is the stock symbol
+- `22.67` is the upper target price (sell limit)
+- `22.59` is the lower target price (buy limit)
