@@ -22,29 +22,38 @@ namespace StockQuoteAlertProject.services
 
         // Método assíncrono para enviar email para uma lista de destinatários
         public async Task EnviarEmailAsync(List<string> recipients, string assunto, string corpo){
-            // Configura o cliente SMTP com host, porta, credenciais e SSL habilitado
-            using var client = new SmtpClient(_host, _port){
-                Credentials = new NetworkCredential(_user, _password),
-                EnableSsl = true
-            };
+            try{
+                // Configura o cliente SMTP com host, porta, credenciais e SSL habilitado
+                using var client = new SmtpClient(_host, _port){
+                    Credentials = new NetworkCredential(_user, _password),
+                    EnableSsl = true
+                };
 
-            // Cria a mensagem de email
-            var mailMessage = new MailMessage{
-                From = new MailAddress(_sender),
-                Subject = assunto,
-                Body = corpo,
-                IsBodyHtml = false, // Corpo em texto simples (não HTML)
-            };
+                // Cria a mensagem de email
+                var mailMessage = new MailMessage{
+                    From = new MailAddress(_sender),
+                    Subject = assunto,
+                    Body = corpo,
+                    IsBodyHtml = false, // Corpo em texto simples (não HTML)
+                };
 
-            // Adiciona todos os destinatários no campo "To"
-            foreach (var recipient in recipients){
-                mailMessage.To.Add(recipient);
+                // Adiciona todos os destinatários no campo "To"
+                foreach (var recipient in recipients){
+                    mailMessage.To.Add(recipient);
+                }
+
+                // Envia o email de forma assíncrona
+                await client.SendMailAsync(mailMessage);
+
+                Console.WriteLine("📧 Alerta enviado por e-mail.");
             }
-
-            // Envia o email de forma assíncrona
-            await client.SendMailAsync(mailMessage);
-
-            Console.WriteLine("📧 Alerta enviado por e-mail.");
+            // Capturando erros ao enviar email
+            catch (SmtpException){
+                throw;
+            }
+            catch (Exception){
+                throw;
+            }
         }
     }
 }
