@@ -22,7 +22,7 @@ Para configurar o sistema, crie um arquivo chamado `config.json` na raiz do proj
     "Recipients": ["exemplo1@email.com", "exemplo2@email.com"]
   },
   "SMTP": {
-    "Host": "smtp.gmail.com",
+    "Host": "smtp@provedor.com",
     "Port": 587,
     "User": "seu_email@provedor.com",
     "Password": "sua_senha_ou_senha_de_app",
