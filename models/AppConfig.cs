@@ -1,5 +1,6 @@
-namespace StockQuoteAlertProject
-{
+using System.Net.Mail;
+
+namespace StockQuoteAlertProject{
     // Classe principal de configuração da aplicação
     public class AppConfig{
         // Intervalo em segundos para o monitoramento (padrão 60s)
@@ -40,10 +41,29 @@ namespace StockQuoteAlertProject
         // Lista de destinatários que receberão os alertas por email
         public List<string> Recipients { get; set; } = new List<string>();
 
-        // Validação para garantir que há destinatários configurados
+        // Validação para garantir que há destinatários configurados e são e-mails válidos
         public void Validate(){
             if (Recipients == null || Recipients.Count == 0)
                 throw new Exception("Nenhum destinatário de email configurado no arquivo config.json.");
+
+            foreach (var recipient in Recipients)
+            {
+                if (!IsValidEmail(recipient))
+                    throw new Exception($"Destinatário de email inválido: {recipient}");
+            }
+        }
+
+        // Método auxiliar para validar formato de email
+        private bool IsValidEmail(string email){
+            try
+            {
+                var addr = new MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 
@@ -60,17 +80,34 @@ namespace StockQuoteAlertProject
             if (string.IsNullOrWhiteSpace(Host))
                 throw new Exception("Provedor de Email não configurado no arquivo de configuração.");
 
-            if (!(Port > 0))
-                throw new Exception("Porta no arquivo de configuração inválida.");
+            if (!(Port > 0 && Port < 65536))
+                throw new Exception("Porta no arquivo de configuração inválida (deve estar entre 1 e 65535).");
 
             if (string.IsNullOrWhiteSpace(User))
                 throw new Exception("Usuário não configurado no arquivo de configuração.");
+            
+            if (!IsValidEmail(User))
+                throw new Exception($"Email usuário inválido: {User}");
 
             if (string.IsNullOrWhiteSpace(Password))
                 throw new Exception("Senha não configurada no arquivo de configuração.");
 
             if (string.IsNullOrWhiteSpace(Sender))
                 throw new Exception("Email remetente não configurado no arquivo de configuração.");
+
+            if (!IsValidEmail(Sender))
+                throw new Exception($"Email remetente inválido: {Sender}");
+        }
+
+        // Método auxiliar para validar formato de email
+        private bool IsValidEmail(string email){
+            try{
+                var addr = new MailAddress(email);
+                return addr.Address == email;
+            }
+            catch{
+                return false;
+            }
         }
     }
 
