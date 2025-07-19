@@ -36,7 +36,7 @@ namespace StockQuoteAlertProject{
                     config.SMTP.Sender
                 );
 
-                Console.WriteLine("\n⏳ Monitorando. Pressione Ctrl + C para encerrar.");
+                Console.WriteLine("\nMonitorando... Pressione Ctrl + C para encerrar.");
                 Console.WriteLine($"\nMonitorando {ativo}... Venda: R$ {precoVenda}, Compra: R$ {precoCompra}");
 
                 // Loop infinito para monitorar o preço periodicamente

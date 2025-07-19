@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using System.Net.Sockets;
 
 namespace StockQuoteAlertProject.services
 {
@@ -42,17 +43,25 @@ namespace StockQuoteAlertProject.services
                     mailMessage.To.Add(recipient);
                 }
 
-                // Envia o email de forma assíncrona
-                await client.SendMailAsync(mailMessage);
+                // Envia o email de forma assíncrona e captura erros específicos de SMTP
+                try{
+                    await client.SendMailAsync(mailMessage);
+                }
+                catch (SmtpException ex) when (ex.InnerException is SocketException socketEx){
+                    throw new Exception($"Erro ao conectar ao servidor SMTP '{_host}:{_port}': {socketEx.Message}", ex);
+                }
+                catch (SmtpException ex){
+                    throw new Exception($"Falha no envio de email via SMTP: {ex.Message}", ex);
+                }
+                catch (Exception ex){
+                    throw new Exception($"Erro inesperado ao enviar email: {ex.Message}", ex);
+                }
 
-                Console.WriteLine("📧 Alerta enviado por e-mail.");
+                Console.WriteLine("Email enviado com sucesso!");
             }
-            // Capturando erros ao enviar email
-            catch (SmtpException){
-                throw;
-            }
-            catch (Exception){
-                throw;
+            // Capturando outros erros que não sejam de SMTP
+            catch (Exception ex){
+                throw new Exception($"Falha ao enviar alerta por e-mail: {ex.Message}. Verifique as configurações de SMTP e os destinatários.", ex);
             }
         }
     }

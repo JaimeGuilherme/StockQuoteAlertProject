@@ -50,6 +50,7 @@ Para configurar o sistema, crie um arquivo chamado `config.json` na raiz do proj
 
 ### Importante:
 
+- Não se esqueça de nenhum campo.
 - Strings (texto) **devem estar entre aspas duplas `" "`**.
 - Números inteiros **não devem ter aspas**.
 - O campo `Recipients` aceita vários e-mails, separados por vírgulas e cada um entre aspas.

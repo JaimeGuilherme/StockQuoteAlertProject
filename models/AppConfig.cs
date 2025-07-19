@@ -18,7 +18,7 @@ namespace StockQuoteAlertProject{
         // Método para validar as configurações carregadas
         public void Validate(){
             if (MonitoringIntervalSeconds <= 0){
-                Console.WriteLine("⚠️ Intervalo inválido no config.json. Usando 60s como padrão.");
+                Console.WriteLine("Intervalo inválido no config.json. Usando 60s como padrão.");
                 MonitoringIntervalSeconds = 60;
             }
 
