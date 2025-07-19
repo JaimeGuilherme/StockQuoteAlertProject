@@ -1,18 +1,21 @@
-using System;
-using System.Collections.Generic;
-
 namespace StockQuoteAlertProject
 {
+    // Classe principal de configuração da aplicação
     public class AppConfig
     {
+        // Intervalo em segundos para o monitoramento (padrão 60s)
         public int MonitoringIntervalSeconds { get; set; } = 60;
 
+        // Configuração dos emails (destinatários)
         public EmailConfig Email { get; set; } = new EmailConfig();
 
+        // Configuração do SMTP para envio de email
         public SmtpConfig SMTP { get; set; } = new SmtpConfig();
 
+        // Configuração da API Brapi (token de autenticação)
         public BrapiConfig Brapi { get; set; } = new BrapiConfig();
 
+        // Método para validar as configurações carregadas
         public void Validate()
         {
             if (MonitoringIntervalSeconds <= 0)
@@ -35,10 +38,13 @@ namespace StockQuoteAlertProject
         }
     }
 
+    // Configurações específicas de Email
     public class EmailConfig
     {
+        // Lista de destinatários que receberão os alertas por email
         public List<string> Recipients { get; set; } = new List<string>();
 
+        // Validação para garantir que há destinatários configurados
         public void Validate()
         {
             if (Recipients == null || Recipients.Count == 0)
@@ -46,14 +52,16 @@ namespace StockQuoteAlertProject
         }
     }
 
+    // Configurações do servidor SMTP para envio de email
     public class SmtpConfig
     {
-        public string Host { get; set; } = "smtp.gmail.com";
-        public int Port { get; set; } = 587;
-        public string User { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public string Sender { get; set; } = string.Empty;
+        public string Host { get; set; } = "smtp.gmail.com"; // Host padrão do Gmail SMTP
+        public int Port { get; set; } = 587;                 // Porta padrão TLS
+        public string User { get; set; } = string.Empty;     // Usuário do SMTP
+        public string Password { get; set; } = string.Empty; // Senha do SMTP
+        public string Sender { get; set; } = string.Empty;   // Email remetente
 
+        // Validação dos campos SMTP obrigatórios
         public void Validate()
         {
             if (!(Port > 0))
@@ -70,10 +78,13 @@ namespace StockQuoteAlertProject
         }
     }
 
+    // Configuração específica da API Brapi
     public class BrapiConfig
     {
+        // Token para autenticação na API
         public string Token { get; set; } = string.Empty;
 
+        // Validação para garantir que o token foi informado
         public void Validate()
         {
             if (string.IsNullOrWhiteSpace(Token))
