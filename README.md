@@ -22,7 +22,7 @@ Para configurar o sistema, crie um arquivo chamado `config.json` na raiz do proj
     "Recipients": ["exemplo1@email.com", "exemplo2@email.com"]
   },
   "SMTP": {
-    "Host": "smtp@provedor.com",
+    "Host": "smtp.provedor.com",
     "Port": 587,
     "User": "seu_email@provedor.com",
     "Password": "sua_senha_ou_senha_de_app",
@@ -40,7 +40,7 @@ Para configurar o sistema, crie um arquivo chamado `config.json` na raiz do proj
 | Campo                       | Tipo         | Descrição                                                                                 | Exemplo                                   |
 |-----------------------------|--------------|-------------------------------------------------------------------------------------------|-------------------------------------------|
 | **Email.Recipients**         | Array string | Lista de e-mails que receberão os alertas. Deve conter pelo menos um e-mail válido.      | `["email1@exemplo.com", "email2@exemplo.com"]` |
-| **SMTP.Host**                | String       | Endereço do servidor SMTP do seu provedor de e-mail.                                     | `"smtp@provedor.com"`                         |
+| **SMTP.Host**                | String       | Endereço do servidor SMTP do seu provedor de e-mail.                                     | `"smtp.provedor.com"`                         |
 | **SMTP.Port**                | Inteiro      | Porta do servidor SMTP (número sem aspas).                                               | `587`                                     |
 | **SMTP.User**                | String       | E-mail usado para autenticação no servidor SMTP.                                         | `"seu_email@provedor.com"`                 |
 | **SMTP.Password**            | String       | Senha do e-mail ou senha de app (no caso de Gmail e outros).                             | `"sua_senha_ou_senha_de_app"`             |
