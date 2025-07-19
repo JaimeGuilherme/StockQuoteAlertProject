@@ -1,8 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "A6B5h7+4EfM=",
+  "dgSpecHash": "aO2Y2+hkySw=",
   "success": true,
   "projectFilePath": "C:\\Users\\jaime\\OneDrive\\Área de Trabalho\\Jaime Guilherme\\INOA - Quest\\StockQuoteAlertProject\\StockQuoteAlertProject.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\jaime\\.nuget\\packages\\microsoft.extensions.configuration\\9.0.0-preview.4.24266.19\\microsoft.extensions.configuration.9.0.0-preview.4.24266.19.nupkg.sha512",
+    "C:\\Users\\jaime\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.0-preview.4.24266.19\\microsoft.extensions.configuration.abstractions.9.0.0-preview.4.24266.19.nupkg.sha512",
+    "C:\\Users\\jaime\\.nuget\\packages\\microsoft.extensions.configuration.fileextensions\\9.0.0-preview.4.24266.19\\microsoft.extensions.configuration.fileextensions.9.0.0-preview.4.24266.19.nupkg.sha512",
+    "C:\\Users\\jaime\\.nuget\\packages\\microsoft.extensions.configuration.json\\9.0.0-preview.4.24266.19\\microsoft.extensions.configuration.json.9.0.0-preview.4.24266.19.nupkg.sha512",
+    "C:\\Users\\jaime\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\9.0.0-preview.4.24266.19\\microsoft.extensions.fileproviders.abstractions.9.0.0-preview.4.24266.19.nupkg.sha512",
+    "C:\\Users\\jaime\\.nuget\\packages\\microsoft.extensions.fileproviders.physical\\9.0.0-preview.4.24266.19\\microsoft.extensions.fileproviders.physical.9.0.0-preview.4.24266.19.nupkg.sha512",
+    "C:\\Users\\jaime\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\9.0.0-preview.4.24266.19\\microsoft.extensions.filesystemglobbing.9.0.0-preview.4.24266.19.nupkg.sha512",
+    "C:\\Users\\jaime\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.0-preview.4.24266.19\\microsoft.extensions.primitives.9.0.0-preview.4.24266.19.nupkg.sha512",
+    "C:\\Users\\jaime\\.nuget\\packages\\system.text.encodings.web\\9.0.0-preview.4.24266.19\\system.text.encodings.web.9.0.0-preview.4.24266.19.nupkg.sha512",
+    "C:\\Users\\jaime\\.nuget\\packages\\system.text.json\\9.0.0-preview.4.24266.19\\system.text.json.9.0.0-preview.4.24266.19.nupkg.sha512"
+  ],
   "logs": []
 }
