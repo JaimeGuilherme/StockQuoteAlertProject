@@ -79,8 +79,8 @@ namespace StockQuoteAlertProject{
                     await Task.Delay(TimeSpan.FromSeconds(config.MonitoringIntervalSeconds));
                 }
             }
+            // Caso ocorra erro ao carregar as configurações, exibe mensagem
             catch (Exception ex){
-                // Caso ocorra erro ao carregar as configurações, exibe mensagem
                 Console.WriteLine($"Erro ao carregar configuração: {ex.Message}");
             }
         }
