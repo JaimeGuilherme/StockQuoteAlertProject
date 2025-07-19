@@ -1,8 +1,7 @@
 namespace StockQuoteAlertProject
 {
     // Classe principal de configuração da aplicação
-    public class AppConfig
-    {
+    public class AppConfig{
         // Intervalo em segundos para o monitoramento (padrão 60s)
         public int MonitoringIntervalSeconds { get; set; } = 60;
 
@@ -16,10 +15,8 @@ namespace StockQuoteAlertProject
         public BrapiConfig Brapi { get; set; } = new BrapiConfig();
 
         // Método para validar as configurações carregadas
-        public void Validate()
-        {
-            if (MonitoringIntervalSeconds <= 0)
-            {
+        public void Validate(){
+            if (MonitoringIntervalSeconds <= 0){
                 Console.WriteLine("⚠️ Intervalo inválido no config.json. Usando 60s como padrão.");
                 MonitoringIntervalSeconds = 60;
             }
@@ -39,22 +36,19 @@ namespace StockQuoteAlertProject
     }
 
     // Configurações específicas de Email
-    public class EmailConfig
-    {
+    public class EmailConfig{
         // Lista de destinatários que receberão os alertas por email
         public List<string> Recipients { get; set; } = new List<string>();
 
         // Validação para garantir que há destinatários configurados
-        public void Validate()
-        {
+        public void Validate(){
             if (Recipients == null || Recipients.Count == 0)
                 throw new Exception("Nenhum destinatário de email configurado no arquivo config.json.");
         }
     }
 
     // Configurações do servidor SMTP para envio de email
-    public class SmtpConfig
-    {
+    public class SmtpConfig{
         public string Host { get; set; } = "smtp.gmail.com"; // Host padrão do Gmail SMTP
         public int Port { get; set; } = 587;                 // Porta padrão TLS
         public string User { get; set; } = string.Empty;     // Usuário do SMTP
@@ -62,8 +56,7 @@ namespace StockQuoteAlertProject
         public string Sender { get; set; } = string.Empty;   // Email remetente
 
         // Validação dos campos SMTP obrigatórios
-        public void Validate()
-        {
+        public void Validate(){
             if (!(Port > 0))
                 throw new Exception("Porta inválida.");
 
@@ -79,14 +72,12 @@ namespace StockQuoteAlertProject
     }
 
     // Configuração específica da API Brapi
-    public class BrapiConfig
-    {
+    public class BrapiConfig{
         // Token para autenticação na API
         public string Token { get; set; } = string.Empty;
 
         // Validação para garantir que o token foi informado
-        public void Validate()
-        {
+        public void Validate(){
             if (string.IsNullOrWhiteSpace(Token))
                 throw new Exception("Token da API Brapi não configurado.");
         }

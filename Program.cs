@@ -3,31 +3,27 @@ using System.Globalization;
 using System.Net.Http.Headers;
 using StockQuoteAlertProject.services;
 
-namespace StockQuoteAlertProject
-{
-    public class Program
-    {
-        public static async Task Main(string[] args)
-        {
+namespace StockQuoteAlertProject{
+    public class Program{
+        public static async Task Main(string[] args){
             // Verifica se os argumentos necessários foram passados
-            if (args.Length != 3)
-            {
-                Console.WriteLine("Uso: stock-quote-alert.exe <ATIVO> <PRECO_VENDA> <PRECO_COMPRA>");
+            if (args.Length != 3){
+                Console.WriteLine("Necessita-se 3 argumentos: ativo, preço de venda e preço de compra.");
+                Console.WriteLine("Uso: dotnet run -- <ATIVO> <PRECO_VENDA> <PRECO_COMPRA>");
                 return;
             }
 
+            // Obtém o ativo, preço de venda e compra das cotações
             string ativo = args[0];
 
             // Tenta converter os preços de venda e compra para decimal, usando cultura invariante
             if (!decimal.TryParse(args[1], NumberStyles.Any, CultureInfo.InvariantCulture, out decimal precoVenda) ||
-                !decimal.TryParse(args[2], NumberStyles.Any, CultureInfo.InvariantCulture, out decimal precoCompra))
-            {
+                !decimal.TryParse(args[2], NumberStyles.Any, CultureInfo.InvariantCulture, out decimal precoCompra)){
                 Console.WriteLine("Preços inválidos.");
                 return;
             }
 
-            try
-            {
+            try{
                 // Carrega configuração do arquivo config.json
                 var config = ConfigService.LoadConfig("config.json");
 
@@ -40,17 +36,17 @@ namespace StockQuoteAlertProject
                     config.SMTP.Sender
                 );
 
-                Console.WriteLine("⏳ Monitorando. Pressione Ctrl + C para encerrar.");
+                Console.WriteLine("\n⏳ Monitorando. Pressione Ctrl + C para encerrar.");
+                Console.WriteLine($"\nMonitorando {ativo}... Venda: R$ {precoVenda}, Compra: R$ {precoCompra}");
 
                 // Loop infinito para monitorar o preço periodicamente
                 while (true)
                 {
-                    Console.WriteLine($"\nMonitorando {ativo}... Venda: R$ {precoVenda}, Compra: R$ {precoCompra}");
                     try
                     {
                         // Obtém o preço atual do ativo via API
                         decimal precoAtual = await ObterPrecoAtual(ativo, config.Brapi.Token);
-                        Console.WriteLine($"{DateTime.Now}: {ativo} = R$ {precoAtual}");
+                        Console.WriteLine($"\n{DateTime.Now}: {ativo} = R$ {precoAtual}");
 
                         // Verifica se o preço ultrapassou o preço de venda configurado
                         if (precoAtual > precoVenda)
@@ -83,18 +79,15 @@ namespace StockQuoteAlertProject
                     await Task.Delay(TimeSpan.FromSeconds(config.MonitoringIntervalSeconds));
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex){
                 // Caso ocorra erro ao carregar as configurações, exibe mensagem
                 Console.WriteLine($"Erro ao carregar configuração: {ex.Message}");
             }
         }
 
         // Método para obter o preço atual do ativo via API da Brapi
-        static async Task<decimal> ObterPrecoAtual(string ativo, string token)
-        {
-            using var client = new HttpClient
-            {
+        static async Task<decimal> ObterPrecoAtual(string ativo, string token){
+            using var client = new HttpClient{
                 Timeout = TimeSpan.FromSeconds(10)
             };
 
@@ -115,6 +108,7 @@ namespace StockQuoteAlertProject
                 throw new Exception($"Ativo '{ativo}' não encontrado ou sem dados.");
 
             var root = results[0];
+
             // Retorna o preço do mercado regular
             return root.GetProperty("regularMarketPrice").GetDecimal();
         }

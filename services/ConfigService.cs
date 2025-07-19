@@ -1,12 +1,9 @@
 using System.Text.Json;
 
-namespace StockQuoteAlertProject.services
-{
-    public static class ConfigService
-    {
+namespace StockQuoteAlertProject.services{
+    public static class ConfigService{
         // Método para carregar o arquivo de configuração JSON e desserializar em AppConfig
-        public static AppConfig LoadConfig(string path)
-        {
+        public static AppConfig LoadConfig(string path){
             // Verifica se o arquivo existe
             if (!File.Exists(path))
                 throw new FileNotFoundException($"Arquivo de configuração '{path}' não encontrado.");
@@ -15,8 +12,7 @@ namespace StockQuoteAlertProject.services
             var json = File.ReadAllText(path);
 
             // Opções para desserialização: ignorar case sensitive nos nomes das propriedades
-            var options = new JsonSerializerOptions
-            {
+            var options = new JsonSerializerOptions{
                 PropertyNameCaseInsensitive = true
             };
 
@@ -33,10 +29,8 @@ namespace StockQuoteAlertProject.services
         }
 
         // Método que valida as configurações obrigatórias e exibe erros caso algo esteja faltando ou incorreto
-        private static void ValidateConfig(AppConfig config)
-        {
-            if (!(config.MonitoringIntervalSeconds > 0))
-            {
+        private static void ValidateConfig(AppConfig config){
+            if (!(config.MonitoringIntervalSeconds > 0)){
                 Console.WriteLine("⚠️ Intervalo inválido no config.json. Usando 60s como padrão.");
                 config.MonitoringIntervalSeconds = 60;
             }
