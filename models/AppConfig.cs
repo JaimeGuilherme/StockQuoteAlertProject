@@ -49,7 +49,7 @@ namespace StockQuoteAlertProject
 
     // Configurações do servidor SMTP para envio de email
     public class SmtpConfig{
-        public string Host { get; set; } = string.Empty;     // Host do SMTP
+        public string Host { get; set; } = string.Empty;     // Provedor do SMTP
         public int Port { get; set; } = 587;                 // Porta padrão TLS
         public string User { get; set; } = string.Empty;     // Usuário do SMTP
         public string Password { get; set; } = string.Empty; // Senha do SMTP
@@ -57,7 +57,7 @@ namespace StockQuoteAlertProject
 
         // Validação dos campos SMTP obrigatórios
         public void Validate(){
-            if (string.IsNullOrWhiteSpace(User))
+            if (string.IsNullOrWhiteSpace(Host))
                 throw new Exception("Provedor de Email não configurado no arquivo de configuração.");
 
             if (!(Port > 0))
