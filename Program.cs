@@ -88,29 +88,56 @@ namespace StockQuoteAlertProject{
         // Método para obter o preço atual do ativo via API da Brapi
         static async Task<decimal> ObterPrecoAtual(string ativo, string token){
             using var client = new HttpClient{
+                // Define o tempo máximo de espera da requisição (10 segundos)
                 Timeout = TimeSpan.FromSeconds(10)
             };
 
-            // Define o token Bearer para autenticação
+            // Define o cabeçalho de autenticação com token Bearer
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             string url = $"https://brapi.dev/api/quote/{ativo}";
-            var response = await client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
 
+            HttpResponseMessage response;
+
+            try{
+                // Envia a requisição GET para a API
+                response = await client.GetAsync(url);
+
+                // Lança exceção se o status não for 2xx
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException httpEx){
+                // Erros de conexão, DNS, 404, 500 etc.
+                throw new Exception($"Erro na requisição HTTP para o ativo '{ativo}': {httpEx.Message}");
+            }
+            catch (TaskCanceledException timeoutEx){
+                // Timeout da requisição
+                throw new Exception($"Timeout ao consultar preço do ativo '{ativo}': {timeoutEx.Message}");
+            }
+
+            // Lê o conteúdo da resposta como stream
             using var stream = await response.Content.ReadAsStreamAsync();
+
+            // Faz o parse do JSON
             using var doc = JsonDocument.Parse(stream);
 
-            var results = doc.RootElement.GetProperty("results");
-
-            // Verifica se retornou algum dado para o ativo
-            if (results.GetArrayLength() == 0)
+            // Tenta acessar a propriedade "results" no JSON
+            if (!doc.RootElement.TryGetProperty("results", out JsonElement results) || results.GetArrayLength() == 0)
                 throw new Exception($"Ativo '{ativo}' não encontrado ou sem dados.");
 
+            // Acessa o primeiro elemento da lista de resultados
             var root = results[0];
 
-            // Retorna o preço do mercado regular
-            return root.GetProperty("regularMarketPrice").GetDecimal();
+            // Verifica se o preço de mercado regular existe no JSON
+            if (!root.TryGetProperty("regularMarketPrice", out JsonElement priceElement))
+                throw new Exception($"Preço do mercado regular não disponível para o ativo '{ativo}'.");
+
+            // Verifica se o valor pode ser convertido corretamente para decimal
+            if (!priceElement.TryGetDecimal(out decimal preco))
+                throw new Exception($"Preço do ativo '{ativo}' está em formato inválido.");
+
+            // Retorna o preço obtido com sucesso
+            return preco;
         }
     }
 }
