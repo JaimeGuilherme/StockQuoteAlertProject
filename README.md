@@ -3,7 +3,7 @@ C# application that monitors stock prices on B3 in real-time and sends automated
 
 ---
 
-## ⚙️ Pré-requisitos
+## ⚙️ Essential Precondition
 
 - [.NET SDK 9+](https://dotnet.microsoft.com/en-us/download)
 - Email account with SMTP access (e.g., Gmail, Outlook, etc)
@@ -11,7 +11,7 @@ C# application that monitors stock prices on B3 in real-time and sends automated
 
 ---
 
-## 🔧 Configuração
+## 🔧 Settings
 
 Create a file named `config.json` in the project root with the following content:
 
